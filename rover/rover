@@ -1,0 +1,180 @@
+// Rover Object
+const rover = {
+  x:1,
+  y:1,
+  travelLog: [{x:1, y:1}]
+}
+let direction = 3;
+
+//Corrects direction value overflow
+function correctDir(){ 
+  if(direction > 4){
+    direction = 1;
+  }
+
+  if (direction < 1){
+    direction = 4;
+  }
+}
+
+function askDirection(){
+  switch(direction){
+    case(1): console.log("Rover is facing North"); 
+      break;
+    case(2): console.log("Rover is facing East");
+      break;
+    case(3): console.log("Rover is facing South");
+      break;  
+    case(4): console.log("Rover is facing West");
+      break;
+    default:
+    break;
+  }
+}
+
+//Moves rover
+function commands(x){
+  let newtravelLog = [];
+  let commandArr = x.split(''); //Loads the string into an array
+  console.log(commandArr);
+  runCommandsFunction = 0;
+
+  for(let i=0; i < commandArr.length; i++){
+        if(commandArr[i] === "f" || commandArr[i] === "b" || commandArr[i] === "r" || commandArr[i] === "l"){
+        }else{
+          runCommandsFunction = 1;
+        }
+  }
+  if(runCommandsFunction === 0){
+    for(let i=0; i < commandArr.length; i++){
+
+          switch(commandArr[i]){
+
+              case("r"):
+                turnRight();
+                break;
+
+              case("l"):
+                turnLeft();
+                break;
+
+              case("f"):
+                moveForward(direction);
+                attemptOOB();
+                if(functionCounter === 1){
+                  functionCounter = 0;
+                }else{
+                  newtravelLog = {x: rover.x, y: rover.y};
+                  rover.travelLog.push(newtravelLog);
+                  console.log("Pushed");
+                  functionCounter = 0;
+                }
+                break;
+
+              case("b"):
+                moveBackwards(direction);
+                attemptOOB();
+                if(functionCounter === 1){
+                  functionCounter = 0;
+                }else{
+                  newtravelLog = {x: rover.x, y: rover.y};
+                  rover.travelLog.push(newtravelLog);
+                  console.log("Pushed");
+                  functionCounter = 0;
+                }
+                break;
+
+              default:
+                break;
+          }
+        correctDir();
+      }
+    }else{
+      console.log("Commands must be f, r, l, or b");
+    }
+  runCommandsFunction = 0; //Reset this function
+}
+
+//Variable of attemptOOB
+let functionCounter = 0;
+//Moves rover back in bounds, prints error message, sets run flag
+function attemptOOB(){ 
+
+  if(rover.x < 0 || rover.y < 0 || rover.x > 9 || rover.y > 9){
+      if(rover.x < 0){
+        rover.x++;
+      }
+      if(rover.x > 9){
+        rover.x--;
+      }
+      if(rover.y > 9){
+        rover.y--;
+      }
+      if(rover.y < 0){
+        rover.y++;
+      }
+    console.log("Can't move outside of the map!");
+    functionCounter = 1;
+  }
+}
+
+//Turns rover left
+function turnLeft(){
+  console.log("turnLeft was called!");
+  direction--;
+}
+
+//Turns rover right
+function turnRight(){
+  console.log("turnRight was called!");
+  direction++;
+}
+
+//Moves rover forward
+function moveForward(dir){
+  console.log("moveForward was called")
+  switch(dir){
+
+    
+      case(1): //North
+        rover.y--;
+        break;
+      
+      case(2): //East
+        rover.x++;
+        break;
+      
+      case(3): //South
+        rover.y++;
+        break;
+      
+      case(4): //West
+        rover.x--;
+        break;
+  }
+
+}
+//Moves rover backwards
+function moveBackwards(dir){
+  console.log("moveBackwards was called")
+
+  switch(dir){
+
+      
+      case(1): //North
+        rover.y++;
+        break;
+      
+      case(2): //East
+        rover.x--;
+        break;
+      
+      case(3): //South
+        rover.y--;
+        break;
+      
+      case(4): //West
+        rover.x++;
+        break;
+  }
+}
